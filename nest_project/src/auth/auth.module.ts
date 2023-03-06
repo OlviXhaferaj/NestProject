@@ -15,7 +15,7 @@ import {ConfigModule} from '@nestjs/config';
   imports:[
     ConfigModule.forRoot({envFilePath:'./../.development.env'}),
     PassportModule.register( { defaultStrategy: 'jwt'} ),
-    JwtModule.register({ secret: process.env.JWT_SECRET, signOptions:{expiresIn: '9000000s'}}),
+    JwtModule.register({ secret: process.env.JWT_SECRET, signOptions:{expiresIn: '90000s'}}),
     
     MongooseModule.forFeature([{name:"User", schema: UserSchema}])
   ],

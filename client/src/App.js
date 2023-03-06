@@ -11,6 +11,8 @@ import Footer from './Components/Footer';
 import Update from './Components/Update';
 import Forgot from './Components/Forgot';
 import Reset from './Components/Reset';
+import UpdateSubjects from './Components/UpdateSubjects';
+import SubjectsForm from './Components/SubjectsForm';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ProtectedRoutes from './Components/ProtectedRoutes';
 
@@ -32,8 +34,10 @@ function App() {
             <Route element={<ProtectedRoutes isLoggedIn={isLoggedIn}/>}>
               <Route path='/students' element={<UserForm/>}/>
               <Route path='/students/list/students/:id' element={<Display/>}/>
-              <Route path={'/students/list/students/:id/edit'} element={<Update/>}/>
+              <Route path={'/students/:id/edit'} element={<Update/>}/>
               <Route path='/students/list' element={<StudentList/>}/>
+              <Route path='/students/:id/grades' element={<SubjectsForm/>}/>
+              <Route path='/students/edit/grades/:id' element={<UpdateSubjects/>}/>
 
             </Route>
           </Routes>

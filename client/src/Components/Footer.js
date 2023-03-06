@@ -1,7 +1,5 @@
-
-
-
 import { NavLink } from 'react-router-dom'
+
 const Footer = () => {
     return (
         <footer  className="bg-dark text-white pt-5 pb-4 mt-5">
@@ -15,10 +13,7 @@ const Footer = () => {
                             <p>-<b>Alber Einstein</b></p>
                         </blockquote>
                     </div>
-                    <div className='col-md-2 col-lg-2 col-xl-2 mx-auto mt-3'>
-                        <h5 className='text-uppercase mb-4 font-weight-bold text-light'>School information</h5>
-                        
-                    </div>
+                    
                     <div className='col-md-2 col-lg-2 col-xl-2 mx-auto mt-3'>
                         <h5 className='text-uppercase mb-4 font-weight-bold text-light'>Pages</h5>
                         <p><NavLink className='font-weight-bold text-light' to={'/students/list'}>Student List</NavLink></p>

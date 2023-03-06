@@ -14,7 +14,7 @@ export class StudentsService {
   async create(createStudentDto: CreateStudentDto) {
     const createdStudent = new this.studentModel(createStudentDto);
     try{
-      await createdStudent.save()
+      return await createdStudent.save()
     }
     catch(error) {
       console.log(error)
@@ -27,7 +27,8 @@ export class StudentsService {
   }
 
   async findOne(id: string):Promise <Student> {
-    return this.studentModel.findOne({_id:id});
+    return this.studentModel.findOne({_id:id})
+    .populate({path:'subjects_id', select:'subjects'});
   }
 
   async update(id: string, updateStudentDto: UpdateStudentDto):Promise <Student>  {

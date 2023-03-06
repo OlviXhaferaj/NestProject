@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import{ useEffect, useState } from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {Container, Nav,Navbar} from 'react-bootstrap'
 
@@ -25,10 +25,7 @@ const Topnav = ({isLoggedIn, setIsLoggedIn}) => {
 
 
     return (
-      
-
-
-        <Navbar bg="dark" variant={'dark'} expand="lg">
+      <Navbar bg="dark" variant={'dark'} expand="lg">
         <Container>
           <Navbar.Brand>React-Bootstrap</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav d-flex flex-direction-column" />
@@ -51,6 +48,7 @@ const Topnav = ({isLoggedIn, setIsLoggedIn}) => {
                   <NavLink className='btn btn-light text-decoration-none text-dark' to={'/register'}>Register</NavLink>
                 </div>
               }
+
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -1,25 +1,34 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Button,Form, Card} from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 
 const Forgot = () => {
     const [email, setEmail] = useState('');
     const [sent, setSent] = useState(false);
 
+    // client side validations
+    const [emailError, setEmailError] = useState('');
+
     const submitHandler =(e) => {
         e.preventDefault();
 
-        axios.post('http://localhost:8000/api/forgot',{
-            email
-        })
-        .then((res) => {
-            setSent(true);
-        })
-        .catch(errors => {
-            console.log(errors);
-        })
+        if(email.length === 0){
+            setEmailError('Email field should not be empty!');
+        }
+        else {
+            setEmailError(null);
+            axios.post('http://localhost:8000/api/forgot',{
+                email
+                })
+                .then((res) => {
+                    setSent(true);
+                })
+                .catch(errors => {
+                    console.log(errors);
+                })
+        }
+        
     }
 
     return (
@@ -34,6 +43,12 @@ const Forgot = () => {
                                 <Form.Group className="mb-4">
                                     <Form.Label className='ml-3 h6 p-2' >Email</Form.Label>
                                     <Form.Control className={'rounded-5 shadow'}  placeholder="Enter your email"  onChange={(e) => setEmail(e.target.value)}/>
+                                    {
+                                        emailError?
+                                        <p className='pt-2 pl-2' style={{color:'red'}}>{emailError}</p>
+                                        :
+                                        null
+                                    }
                                 </Form.Group>
 
                                 <Button className='ml-3  mb-3 shadow' variant={'primary'}type="submit">Submit</Button>

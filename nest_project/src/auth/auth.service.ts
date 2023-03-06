@@ -42,6 +42,8 @@ export class AuthService {
         const {email, password} = loginDto;
 
         const user = await this.userModel.findOne({email});
+        console.log(user.roles, 'this is roles');
+        
         // find if the user who wants to log in exists or not
         if(!user.password) {
             throw new UnauthorizedException('Invalid email or password');
@@ -55,7 +57,9 @@ export class AuthService {
         const token = this.jwtService.sign({id:user._id, name:user.name})
         return {token}
     }
-    
+
+
+
     async findOne(condition:any): Promise<User>{
         return this.userModel.findOne(condition);
     }

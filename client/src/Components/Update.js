@@ -1,10 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import axios from 'axios';
 import {  NavLink,useNavigate, useParams } from 'react-router-dom';
 import {Button, Form, Card} from 'react-bootstrap';
-
-// import FileBase64 from 'react-file-base64';
-
 
 const Update = () => {
     const {id} = useParams();
@@ -13,17 +10,29 @@ const Update = () => {
     const [staticName, setStaticName] = useState('');
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [maths, setMaths] = useState('A');
-    const [english, setEnglish] = useState('A');
-    const [physics, setPhysics] = useState('A');
-    const [chemistry, setChemistry] = useState('A');
-    const [history, setHistory] = useState('A');
-    const [sports, setSports] = useState('A');
+    // const [maths, setMaths] = useState('A');
+    // const [english, setEnglish] = useState('A');
+    // const [physics, setPhysics] = useState('A');
+    // const [chemistry, setChemistry] = useState('A');
+    // const [history, setHistory] = useState('A');
+    // const [sports, setSports] = useState('A');
+
+    // Client side Validation
+    const [nameError, setNameError] = useState('');
+    const [lastNameError, setLastNameError] = useState('');
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:8000/students')
+        let token = localStorage.getItem("token")
+        let config = {
+            withCredentials:true,
+            headers: {
+                Authorization: 'Bearer '+ token ,
+            }
+        }
+        
+        axios.get('http://localhost:8000/students',config)
         .then((res) => {
             setStudents(res.data);
         })
@@ -33,17 +42,24 @@ const Update = () => {
     }, [])
 
     useEffect(() => {
-        axios.get('http://localhost:8000/students/'+ id)
+        let token = localStorage.getItem("token")
+        let config = {
+            withCredentials:true,
+            headers: {
+                Authorization: 'Bearer '+ token ,
+            }
+        }
+        axios.get('http://localhost:8000/students/'+ id, config)
         .then(res => {
             setStaticName(res.data.name);
             setName(res.data.name);
             setLastName(res.data.lastName);
-            setMaths(res.data.subjects.maths);
-            setEnglish(res.data.subjects.english);
-            setPhysics(res.data.subjects.physics);
-            setChemistry(res.data.subjects.chemistry);
-            setHistory(res.data.subjects.history);
-            setSports(res.data.subjects.sports);
+            // setMaths(res.data.subjects.maths);
+            // setEnglish(res.data.subjects.english);
+            // setPhysics(res.data.subjects.physics);
+            // setChemistry(res.data.subjects.chemistry);
+            // setHistory(res.data.subjects.history);
+            // setSports(res.data.subjects.sports);
         })
         .catch(err => {
             console.log(err)
@@ -52,25 +68,52 @@ const Update = () => {
 
     const updateStudent = (e) => {
         e.preventDefault();
-        axios.patch('http://localhost:8000/students/' +id, {
-            name,
-            lastName,
-            subjects:{
-                maths:maths,
-                english:english,
-                physics:physics,
-                chemistry:chemistry,
-                history:history,
-                sports:sports
+        let token = localStorage.getItem("token")
+        let config = {
+            withCredentials:true,
+            headers: {
+                Authorization: 'Bearer '+ token ,
             }
-        })
-        .then(res => {
-            console.log(res);
-            navigate('/students/list')
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+        }
+
+        if(name.length<3){
+            setNameError('Name must be at least 3 characters')
+            if(lastName.length>3){
+                setLastNameError(null);
+            }
+        }
+        if(lastName.length<4){
+            setLastNameError('Last Name must be at least 4 characters')
+            if(name.length >2){
+                setNameError(null);
+            }
+        }
+        else {
+            setNameError(null);
+            setLastNameError(null);
+            axios.patch('http://localhost:8000/students/' +id, {
+                name,
+                lastName,
+                // subjects:{
+                //     maths:maths,
+                //     english:english,
+                //     physics:physics,
+                //     chemistry:chemistry,
+                //     history:history,
+                //     sports:sports
+                // }
+            },
+            config
+            )
+                .then(res => {
+                    console.log(res);
+                    navigate('/students/list')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+        
     }
     const cancelHandle = () => {
         navigate('/students/list')
@@ -88,13 +131,23 @@ const Update = () => {
                         <Form.Group className="mb-4 mx-2" controlId="formBasicEmail">
                             <Form.Label>Name</Form.Label>
                             <Form.Control value={name} type="text" placeholder="Enter Name" onChange={(e) => setName(e.target.value)} />
+                            {
+                                nameError?
+                                <p className={'text-danger'}>{nameError}</p>
+                                : null
+                            }
                         </Form.Group>
 
                         <Form.Group className="mb-4 mx-2" controlId="formBasicPassword">
                             <Form.Label>Last Name</Form.Label>
                             <Form.Control value={lastName} type="text" placeholder="Enter surname" onChange={(e) => setLastName(e.target.value)}/>
+                            {
+                                lastNameError?
+                                <p className={'text-danger'}>{lastNameError}</p>
+                                : null
+                            }
                         </Form.Group>
-                        <Form.Group className="mb-4 mx-2" controlId="formBasicPassword">
+        {/* <Form.Group className="mb-4 mx-2" controlId="formBasicPassword">
                     <Form.Label>Grades</Form.Label>
 
                 <Form.Group className="mb-4 mx-2" controlId="formBasicPassword">
@@ -164,7 +217,7 @@ const Update = () => {
                         <option value={'F'}>F</option>
                     </select>
                 </Form.Group>
-            </Form.Group>
+    </Form.Group> */}
 
                         <Button className='mt-3 mx-2' variant="primary" type="submit">Submit</Button>
                         
@@ -177,8 +230,9 @@ const Update = () => {
                     <NavLink to={'/students'}>New</NavLink>
                 </div>
             }
-            {/* <NavLink className={'btn btn-dark m-auto'} to={'/students/list'}>Back to list of students</NavLink> */}
-            
+            <div className='mt-5 mb-3'>
+                <NavLink className={'mt-2'} to={`/students/list/students/${id}`}>Back</NavLink>
+            </div>
         </div>
     ) 
 }

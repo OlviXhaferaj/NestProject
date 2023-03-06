@@ -1,9 +1,10 @@
 // import { MailerService } from '@nestjs-modules/mailer/dist';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Body, NotFoundException, Post } from '@nestjs/common';
+import { Body, NotFoundException, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { PasswordDto } from './dto/password.dto';
 import { PasswordService } from './password.service';
+import { UpdatePassword } from './dto/update.dto';
 import { Password } from './schema/password.model';
 import { AuthService } from 'src/auth/auth.service';
 import * as bcrypt from 'bcryptjs'
@@ -48,9 +49,13 @@ export class PasswordController {
     }
 
     @Post('reset')
+
+    @UsePipes(ValidationPipe)
     async reset(
         @Body('token') token:string,
-        @Body('password')password: string 
+        // @Body('password')password: string 
+        @Body() updatePassword: UpdatePassword
+        
     ) {
         const passwordReset: any = await this.passwordService.findOne({token});
 
@@ -65,7 +70,7 @@ export class PasswordController {
             throw new NotFoundException('User not found!');
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(updatePassword.password, 10);
 
         await this.authService.update(user.email, {password:hashedPassword})
         return {

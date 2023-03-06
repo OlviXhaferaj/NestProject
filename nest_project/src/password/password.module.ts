@@ -17,8 +17,9 @@ import { AuthModule } from 'src/auth/auth.module';
   ]),
     MailerModule.forRoot({
       transport: {
+        service: 'gmail',
         host:'0.0.0.0',
-        port:1025
+        port:1025,
       },
       defaults:{
         from: 'admin@example.com'

@@ -1,36 +1,18 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateStudentDto } from './create-student.dto';
+import * as mongoose from 'mongoose';
+import { IsNotEmpty, MinLength } from 'class-validator';
 
 export class UpdateStudentDto extends PartialType(CreateStudentDto) {
 
+
+    @IsNotEmpty({message: "Name field should not be empty"})
+    @MinLength(3, {message: 'Name should be at least 3 characters'})
     name:string;
 
+    @IsNotEmpty({message: "Last Name field should not be empty"})
+    @MinLength(4, {message: 'Last name should be at least 4 characters'})
     lastName: string;
-    
-    subjects:{
-        maths: {
-            type:string,
-            enum: ['A','B','C','D','E','F']
-        },
-        english: {
-            type:string,
-            enum: ['A','B','C','D','E','F']
-        },
-        physics: {
-            type:string,
-            enum: ['A','B','C','D','E','F']
-        },
-        chemistry: {
-            type:string,
-            enum: ['A','B','C','D','E','F']
-        },
-        history: {
-            type:string,
-            enum: ['A','B','C','D','E','F']
-        },
-        sports: {
-            type:string,
-            enum: ['A','B','C','D','E','F']
-        }
-    } 
+
+    subjects_id: string
 }

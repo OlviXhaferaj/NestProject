@@ -1,13 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import {Button,Form, Card} from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const Reset = () => {
     const [password, setPassword] = useState('');
+
+    // Client side validation
+    const [passwordError, setPasswordError] = useState('');
+
     const navigate = useNavigate()
-    const tt = "73h02dd18a"
+    // const tt = "73h02dd18a"
     const {token} = useParams();
     useEffect(() => {
         console.log(token)
@@ -15,14 +18,22 @@ const Reset = () => {
     
     const submitHandler = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8000/api/reset', {
-            token:token,
-            password
-        })
-        .then(res => {
-            navigate('/login')
-            console.log(token);
-        })
+
+        if(password.length<6){
+            setPasswordError('Password must be at least 6 characters');
+        }
+        else{
+            setPasswordError(null);
+            axios.post('http://localhost:8000/api/reset', {
+                token:token,
+                password
+                })
+                .then(res => {
+                    navigate('/login')
+                    console.log(token);
+                })
+        }
+        
     }
 
     return (
@@ -37,6 +48,12 @@ const Reset = () => {
                                     <Form.Label className='ml-3 h6 p-2' >Password</Form.Label>
                                     <Form.Control className={'rounded-5 shadow'}  placeholder="Enter your password"  onChange={(e) => setPassword(e.target.value)}/>
                                 </Form.Group>
+                                {
+                                    passwordError?
+                                    <p className='text-danger'>{passwordError}</p>
+                                    :
+                                    null
+                                }
 
                                 <Button className='ml-3  mb-3 shadow' variant={'primary'}type="submit">Submit</Button>
 
