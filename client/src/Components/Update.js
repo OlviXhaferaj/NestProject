@@ -93,15 +93,7 @@ const Update = () => {
             setLastNameError(null);
             axios.patch('http://localhost:8000/students/' +id, {
                 name,
-                lastName,
-                // subjects:{
-                //     maths:maths,
-                //     english:english,
-                //     physics:physics,
-                //     chemistry:chemistry,
-                //     history:history,
-                //     sports:sports
-                // }
+                lastName
             },
             config
             )
